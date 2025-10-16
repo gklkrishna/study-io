@@ -1,0 +1,81 @@
+/* Reset default margin/padding */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.main-content {
+  font-family: 'Poppins', sans-serif; /* Matches others */
+  background-color: #1f1f1f;
+  color: #e0e0e0;
+  padding: 40px 20px; /* Matches Dashboard/Study Goals */
+  flex-grow: 1;
+}
+
+/* Analysis Container and Chart Styles */
+.analysis-container {
+  background-color: #282828;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  padding: 20px;
+  border-radius: 8px; /* Added for consistency */
+}
+
+.analysis-container h2 {
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 2rem;
+  color: #ff6b6b;
+}
+
+.chart-section {
+  margin-bottom: 50px;
+}
+
+.chart-section h3 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: #e0e0e0;
+}
+
+/* Chart Layout */
+.chart-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 20px;
+}
+
+.chart-card {
+  background-color: #1f1f1f;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(255, 107, 107, 0.3);
+  flex: 1 1 45%;
+  min-width: 400px;
+}
+
+.chart-card canvas {
+  width: 100% !important;
+  height: 500px !important;
+  background-color: #1f1f1f;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1f1f1f;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ff6b6b;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ff4040;
+}

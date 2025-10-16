@@ -1,0 +1,55 @@
+body {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: row;
+    background: linear-gradient(to bottom, #2c3e50, #3498db);
+    font-family: Arial, sans-serif;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 220px;
+    background: #121212;
+    color:#ff6b6b;
+    size:1.8rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+    position: fixed;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000; /* Increased z-index to stay above all content */
+    font-size: 16px; /* Base font size for sidebar */
+}
+
+.sidebar h2 {
+    margin-bottom: 20px;
+    font-size: 24px !important; /* Locked size */
+    font-family: Arial, sans-serif !important; /* Locked font */
+}
+
+.sidebar a {
+    color: white;
+    text-decoration: none;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    text-align: center;
+    font-size: 16px !important; /* Locked size */
+    font-family: Arial, sans-serif !important; /* Locked font */
+    transition: background 0.3s;
+}
+
+.sidebar a:hover, .sidebar a.active {
+    background: #333;
+}
+
+.content {
+    margin-left: 220px;
+    padding: 0; /* Let child pages control padding */
+    flex-grow: 1;
+}

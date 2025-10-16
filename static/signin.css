@@ -1,0 +1,113 @@
+/* Sign In Page Styles */
+body {
+    background: #333333; /* Matches main-content background from solo-study.css */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: "Poppins", sans-serif; /* Matches font from other pages */
+    position: relative; /* For absolute positioning of home button */
+}
+
+.signin-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 40px;
+    background: #2a2a2a; /* Matches li background from studygoals.css */
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Matches shadow from studygoals.css */
+    text-align: center;
+    color: #e0e0e0; /* Matches text color from other pages */
+}
+
+.signin-container h2 {
+    margin-bottom: 20px;
+    color: #ff6b6b; /* Matches header color from studygoals.css */
+    font-weight: bold;
+}
+
+.input-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #e0e0e0; /* Matches text color */
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px; /* Matches padding from goal-form input in studygoals.css */
+    border: none;
+    border-radius: 5px;
+    background: #3a3a3a; /* Matches input background from studygoals.css */
+    color: #e0e0e0; /* Matches text color */
+    font-size: 16px; /* Matches font size from studygoals.css */
+    transition: background 0.3s; /* Matches transition from studygoals.css */
+}
+
+.input-group input:focus {
+    background: #4a4a4a; /* Matches focus background from studygoals.css */
+    outline: none;
+}
+
+.btn {
+    width: 100%;
+    padding: 12px 20px; /* Matches padding from goal-form button in studygoals.css */
+    background: linear-gradient(45deg, #ff6b6b, #ff8c8c); /* Matches red gradient from studygoals.css */
+    color: white;
+    font-size: 16px; /* Matches font size from studygoals.css */
+    font-weight: bold;
+    border: none;
+    border-radius: 30px; /* Matches border-radius from studygoals.css */
+    cursor: pointer;
+    transition: transform 0.3s, background 0.3s; /* Matches transition from studygoals.css */
+}
+
+.btn:hover {
+    transform: scale(1.05); /* Matches hover effect from studygoals.css */
+    background: linear-gradient(45deg, #ff8c8c, #ff6b6b); /* Matches hover gradient from studygoals.css */
+}
+
+.signup-link {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #e0e0e0; /* Matches text color */
+}
+
+.signup-link a {
+    color: #ff6b6b; /* Matches red accent */
+    text-decoration: none;
+}
+
+.signup-link a:hover {
+    text-decoration: underline;
+}
+
+/* Home Button Styles */
+.home-btn {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    padding: 10px; /* Reduced padding to fit the image */
+    border-radius: 50%; /* Circular button for a modern look */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: transform 0.3s, background 0.3s; /* Matches transition */
+}
+
+.home-btn:hover {
+    transform: scale(1.1); /* Slightly larger scale for hover effect */
+}
+
+.home-icon {
+    width: 24px; /* Adjust size as needed */
+    height: 24px; /* Adjust size as needed */
+    display: block;
+}

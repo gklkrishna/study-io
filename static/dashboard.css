@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+* {
+  box-sizing: border-box;
+}
+.main-content {
+    padding: 40px 20px;
+    background: #1f1f1f;
+    color: #e0e0e0;
+    flex-grow: 1;
+    font-family: 'Poppins', sans-serif;
+}
+
+/* Top Section */
+.top-section {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.top-section h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #ff6b6b;
+}
+
+/* Buttons */
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.btn {
+    display: inline-block;
+    padding: 12px 25px;
+    background: linear-gradient(45deg, #ff6b6b, #ff8c8c);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: 600;
+    transition: transform 0.3s, background 0.3s;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+    background: linear-gradient(45deg, #ff8c8c, #ff6b6b);
+}
+
+.btn.secondary {
+    background: linear-gradient(45deg, #009688, #00bfa5);
+}
+
+.btn.secondary:hover {
+    background: linear-gradient(45deg, #00bfa5, #009688);
+}
+
+/* Study Rooms */
+.study-rooms {
+    text-align: center;
+}
+
+.study-rooms h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #ff6b6b;
+}
+
+.study-room-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    padding: 0 20px;
+}
+
+.study-room-card {
+    background: #2a2a2a;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.study-room-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+}
+
+.study-room-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #ff6b6b;
+}
+
+.study-room-card p {
+    font-size: 1rem;
+    margin-bottom: 15px;
+    color: #ccc;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .main-content {
+        padding: 20px;
+    }
+}

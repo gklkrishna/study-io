@@ -1,0 +1,127 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+/* Center everything */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #1f1f1f;
+    font-family: 'Poppins', sans-serif;
+    color: #e0e0e0;
+}
+
+/* Home Button */
+.home-button {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 50px;
+    height: 50px;
+}
+
+.home-button img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: transform 0.2s ease-in-out;
+}
+
+.home-button img:hover {
+    transform: scale(1.1);
+}
+
+/* Container box */
+.container {
+    background: #2a2a2a;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    width: 380px;
+}
+
+/* Heading */
+h1 {
+    font-size: 22px;
+    font-weight: bold;
+    color: #ff6b6b;
+    margin-bottom: 10px;
+}
+
+/* Message box */
+.message-box {
+    margin-bottom: 10px;
+}
+
+.message {
+    font-size: 14px;
+    font-weight: 500;
+    color: #e0e0e0;
+}
+
+/* Align inputs properly */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+}
+
+/* Input field styles */
+input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #444;
+    background: #1f1f1f;
+    border-radius: 6px;
+    font-size: 16px;
+    outline: none;
+    transition: border 0.3s ease;
+    text-align: center;
+    color: #e0e0e0;
+}
+
+input:focus {
+    border-color: #ff6b6b;
+}
+
+/* Button container */
+.button-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 15px;
+}
+
+/* Default Button */
+button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(45deg, #ff6b6b, #ff8c8c);
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: transform 0.3s, background 0.3s;
+}
+
+button:hover {
+    transform: scale(1.05);
+    background: linear-gradient(45deg, #ff8c8c, #ff6b6b);
+}
+
+/* Red Button (For Create Page) */
+.purple-btn {
+    background: linear-gradient(45deg, #ff6b6b, #ff8c8c);
+    border-radius: 30px;
+}
+
+.purple-btn:hover {
+    background: linear-gradient(45deg, #ff8c8c, #ff6b6b);
+}

@@ -1,0 +1,338 @@
+/* General Styles */
+body {
+  background: #1f1f1f;
+  color: #e0e0e0;
+  font-family: "Poppins", sans-serif;
+  text-align: center;
+  height: 100vh;
+  overflow: hidden;
+  margin: 0;
+}
+
+/* Top Controls Container */
+.top-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Spread elements: home left, title center, toggle right */
+  padding: 0 20px; /* Add padding for spacing from edges */
+  margin: 20px 0;
+}
+
+/* Title Styling */
+.title {
+  font-size: 28px;
+  font-weight: bold;
+  margin: 0; /* Remove default margin to align properly */
+  letter-spacing: 1px;
+  flex-grow: 1; /* Allows title to take up available space, centering it */
+  text-align: center;
+}
+
+/* Home Button */
+.home-btn {
+  display: inline-block;
+  transition: transform 0.3s;
+}
+
+.home-icon {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+}
+
+.home-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Toggle Switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #ff6b6b;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+/* Focus Mode Label */
+.focus-label {
+  font-size: 16px;
+  color: #e0e0e0;
+  margin-left: 10px;
+}
+
+/* Grid Layout */
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 20px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* Box Styling */
+.box {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* Chat Box */
+.chat-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 500px;
+  overflow-y: auto;
+  padding: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: #ff6b6b transparent;
+}
+
+.chat-box::-webkit-scrollbar {
+  width: 5px;
+}
+
+.chat-box::-webkit-scrollbar-thumb {
+  background: #ff6b6b;
+  border-radius: 10px;
+}
+
+/* Message Styling */
+.message {
+  max-width: 80%;
+  padding: 12px;
+  margin: 6px;
+  border-radius: 12px;
+  word-wrap: break-word;
+  display: flex;
+  align-items: center;
+  transition: 0.3s ease;
+}
+
+/* Profile Picture */
+.profile-pic {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+}
+
+.profile-pic img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Username Styling */
+.username {
+  font-weight: bold;
+  margin-bottom: 5px;
+  font-size: 16px;
+}
+
+/* Receiver & Sender Messages */
+.receiver {
+  background: rgba(255, 107, 107, 0.8);
+  color: white;
+  align-self: flex-start;
+  border-radius: 15px 15px 15px 5px;
+}
+
+.sender {
+  background: rgba(255, 107, 107, 0.6);
+  color: white;
+  align-self: flex-end;
+  border-radius: 15px 15px 5px 15px;
+}
+
+/* Input & Send Button Container */
+.input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+/* Chat Input Box */
+.message-input {
+  width: 100%;
+  max-width: 300px;
+  height: 60px;
+  border-radius: 10px;
+  padding: 12px;
+  border: 1px solid #555;
+  background: #e0e0e0;
+  color: #1f1f1f;
+  font-size: 14px;
+  outline: none;
+  resize: none;
+  text-align: left;
+  display: block;
+  box-sizing: border-box;
+}
+
+/* Send Button */
+.send-btn {
+  width: 100%;
+  max-width: 300px;
+  padding: 12px;
+  background: linear-gradient(90deg, #ff6b6b, #ff8787);
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.send-btn:hover {
+  background: #ff4f4f;
+}
+
+/* Pomodoro Timer */
+.timer {
+  font-size: 36px;
+  font-weight: bold;
+  margin: 15px 0;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 10px;
+}
+
+/* Timer Buttons */
+.timer-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn {
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.start {
+  background-color: #27ae60;
+  color: white;
+}
+
+.pause {
+  background-color: #f39c12;
+  color: black;
+}
+
+.reset {
+  background-color: #ff6b6b;
+  color: white;
+}
+
+.start:hover {
+  background-color: #2ecc71;
+}
+
+.pause:hover {
+  background-color: #f1c40f;
+}
+
+.reset:hover {
+  background-color: #ff4f4f;
+}
+
+/* Studying Members */
+#active-members {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.studying-member {
+  background: #2d2d2d;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+}
+
+.studying-member img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+}
+
+.studying-member span {
+  display: block;
+  font-size: 14px;
+  margin-top: 5px;
+  color: #e0e0e0;
+}
+.leave-room-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.leave-btn {
+  padding: 12px 20px;
+  background-color: #ff6b6b;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s ease;
+}
+
+.leave-btn:hover {
+  background-color: #ff4c4c;
+}

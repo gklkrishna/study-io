@@ -1,0 +1,235 @@
+/* Apply box-sizing globally to prevent overflow */
+* {
+    box-sizing: border-box;
+}
+
+.timer-display {
+    font-size: 50px;
+    font-weight: 500;
+    font-style: bold;
+}
+
+.main-content {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background: #333333;
+    color: #e0e0e0;
+    flex-grow: 1;
+}
+
+.study-section {
+    width: 65%;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+    color: white;
+}
+
+.right-sidebar {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Buttons (General) */
+button {
+    background: #009688;
+    color: white;
+    padding: 12px 24px;
+    margin: 10px 5px;
+    border: none;
+    cursor: pointer;
+    border-radius: 30px;
+    transition: 0.3s;
+    font-family: "Poppins", sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+button:hover {
+    background: green;
+}
+
+/* Red Buttons */
+.red-button {
+    background: #ff6b6b;
+}
+
+.red-button:hover {
+    background: #e74c3c;
+}
+
+/* Notepad & To-Do Containers */
+.notepad, .todo-list {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Notepad Textbox */
+.notepad-textbox {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 8px;
+    border: 1px solid #555;
+    background: #444;
+    color: #e0e0e0;
+    font-size: 14px;
+    font-family: "Poppins", sans-serif;
+    resize: vertical;
+    transition: border-color 0.3s;
+}
+
+.notepad-textbox:focus {
+    border-color: #ff6b6b;
+    outline: none;
+}
+
+/* Task Input Textbox */
+.task-input {
+    width: 100%;
+    padding: 8px 12px;
+    margin: 8px 0;
+    border-radius: 25px;
+    border: 1px solid #555;
+    background: #444;
+    color: #e0e0e0;
+    font-size: 14px;
+    font-family: "Poppins", sans-serif;
+    transition: border-color 0.3s;
+}
+
+.task-input:focus {
+    border-color: #ff6b6b;
+    outline: none;
+}
+
+/* To-Do List Items */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+ul li {
+    padding: 12px;
+    background: #2a2a2a; /* Darker background for better contrast */
+    color: #e0e0e0; /* Light text to match theme */
+    margin: 8px 0;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "Poppins", sans-serif;
+    font-size: 14px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: background 0.3s;
+}
+
+ul li.completed {
+    background: #1f3a1f; /* Subtle green tint for completed tasks */
+}
+
+ul li.completed .todo-text {
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+.todo-text {
+    flex: 1;
+    padding-right: 10px;
+}
+
+.todo-actions {
+    display: flex;
+    gap: 5px;
+}
+
+ul li button.toggle-btn {
+    background: #ff6b6b; /* Matches red theme */
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: background 0.3s;
+}
+
+ul li button.toggle-btn:hover {
+    background: #e74c3c;
+}
+
+ul li.completed button.toggle-btn {
+    background: #32CD32; /* Green for completed */
+}
+
+ul li button.delete-btn {
+    background: #ff3333;
+    padding: 6px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: background 0.3s;
+}
+
+ul li button.delete-btn:hover {
+    background: #cc0000;
+}
+
+/* Focus Mode Toggle */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 25px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    border-radius: 25px;
+    transition: 0.4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 4px;
+    bottom: 3px;
+    background-color: white;
+    border-radius: 50%;
+    transition: 0.4s;
+}
+
+input:checked + .slider {
+    background-color: #009688;
+}
+
+input:checked + .slider:before {
+    transform: translateX(24px);
+}
+
+/* Focus Mode: Hide main sidebar when body has .focus-mode-active */
+body.focus-mode-active .sidebar {
+    display: none;
+}
+
+/* Adjust content margin when sidebar is hidden */
+body.focus-mode-active .content {
+    margin-left: 0;
+}

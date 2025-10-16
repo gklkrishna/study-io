@@ -1,0 +1,116 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+/* Reset Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Main Content */
+.main-content {
+    font-family: 'Poppins', sans-serif;
+    background: #1f1f1f;
+    color: #e0e0e0;
+    padding: 40px 20px;
+    flex-grow: 1;
+}
+
+/* Community Section */
+.community-section {
+    text-align: center;
+}
+
+.community-section h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: #ff6b6b;
+}
+
+.community-section p {
+    font-size: 1.1rem;
+    margin-bottom: 40px;
+    color: #ccc;
+}
+
+/* Community Container */
+.community-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Community Card */
+.community-card {
+    background: #2a2a2a;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex; /* Added flexbox */
+    flex-direction: column; /* Stack vertically */
+    min-height: 350px; /* Fixed height for consistency */
+}
+
+.community-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+.community-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.community-card h3 {
+    font-size: 1.5rem;
+    margin: 15px 10px 5px;
+    color: #ff6b6b;
+}
+
+.community-card p {
+    font-size: 0.95rem;
+    margin: 0 10px 15px;
+    color: #ccc;
+    flex-grow: 1; /* Pushes button down */
+}
+
+/* Join Button */
+.join-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: linear-gradient(45deg, #ff6b6b, #ff8c8c);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 30px;
+    font-weight: 600;
+    transition: background 0.3s ease, transform 0.3s ease;
+    font-size: 16px;
+    margin: 0 10px 15px; /* Centered with side margins, bottom margin for spacing */
+    align-self: center; /* Center horizontally within flex column */
+}
+
+.join-btn:hover {
+    background: linear-gradient(45deg, #ff8c8c, #ff6b6b);
+    transform: scale(1.05);
+}
+
+/* Footer */
+footer {
+    background: #1a1a1a;
+    padding: 20px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: #777;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .community-container {
+        grid-template-columns: 1fr;
+    }
+}
