@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+{% block title %}Study Stats - Study.io{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='study_analysis.css') }}">
+
+<div class="main-content">
+    <div class="analysis-container">
+        <h2>Study Analysis</h2>
+
+        <!-- DAILY -->
+        <div class="chart-section">
+            <h3>Daily Study Analysis</h3>
+            <div class="chart-group">
+                <div class="chart-card">
+                    <canvas id="dailyBarChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <canvas id="dailyLineChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- WEEKLY -->
+        <div class="chart-section">
+            <h3>Weekly Study Analysis</h3>
+            <div class="chart-group">
+                <div class="chart-card">
+                    <canvas id="weeklyLineChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <canvas id="weeklyBarChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- SESSION DURATION -->
+        <div class="chart-section">
+            <h3>Session Duration Distribution</h3>
+            <div class="chart-group">
+                <div class="chart-card">
+                    <canvas id="sessionPieChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <canvas id="sessionLineChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- ROOM COMPARISON -->
+        <div class="chart-section">
+            <h3>Room Comparison</h3>
+            <div class="chart-group">
+                <div class="chart-card">
+                    <canvas id="roomLineChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <canvas id="roomBarChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    fetch('/analysis_data')
+        .then(response => response.json())
+        .then(data => {
+            const convertToMinutes = seconds => Math.round((seconds / 60) * 100) / 100;
+            const dailyLabels = data.daily.map(item => item[0]);
+            const dailyData = data.daily.map(item => convertToMinutes(item[1]));
+            const weeklyLabels = data.weekly.map(item => item[0]);
+            const weeklyData = data.weekly.map(item => convertToMinutes(item[1]));
+            let short = 0, medium = 0, long = 0;
+            data.session_durations.forEach(duration => {
+                const minutes = duration / 60;
+                if (minutes < 30) short++;
+                else if (minutes < 60) medium++;
+                else long++;
+            });
+            const sessionCategories = ['Short (<30min)', 'Medium (30-60min)', 'Long (>60min)'];
+            const sessionCounts = [short, medium, long];
+            const roomLabels = data.room_comparison.map(item => item.room);
+            const roomData = data.room_comparison.map(item => convertToMinutes(item.total));
+
+            new Chart(document.getElementById('dailyBarChart'), {
+                type: 'bar',
+                data: {
+                    labels: dailyLabels,
+                    datasets: [{
+                        label: 'Daily Study Time (minutes)',
+                        data: dailyData,
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)'
+                    }]
+                },
+                options: { scales: { y: { beginAtZero: true } } }
+            });
+
+            new Chart(document.getElementById('dailyLineChart'), {
+                type: 'line',
+                data: {
+                    labels: dailyLabels,
+                    datasets: [{
+                        label: 'Daily Study Time (minutes)',
+                        data: dailyData,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        fill: true,
+                        tension: 0.1
+                    }]
+                },
+                options: { scales: { y: { beginAtZero: true } } }
+            });
+
+            new Chart(document.getElementById('weeklyLineChart'), {
+                type: 'line',
+                data: {
+                    labels: weeklyLabels,
+                    datasets: [{
+                        label: 'Weekly Study Time (minutes)',
+                        data: weeklyData,
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                        fill: true,
+                        tension: 0.1
+                    }]
+                },
+                options: { scales: { y: { beginAtZero: true } } }
+            });
+
+            new Chart(document.getElementById('weeklyBarChart'), {
+                type: 'bar',
+                data: {
+                    labels: weeklyLabels,
+                    datasets: [{
+                        label: 'Weekly Study Time (minutes)',
+                        data: weeklyData,
+                        backgroundColor: 'rgba(153, 102, 255, 0.6)'
+                    }]
+                },
+                options: { scales: { y: { beginAtZero: true } } }
+            });
+
+            new Chart(document.getElementById('sessionPieChart'), {
+                type: 'pie',
+                data: {
+                    labels: sessionCategories,
+                    datasets: [{
+                        data: sessionCounts,
+                        backgroundColor: ['rgba(255, 99, 132, 0.6)', 'rgba(54, 162, 235, 0.6)', 'rgba(255, 206, 86, 0.6)']
+                    }]
+                }
+            });
+
+            new Chart(document.getElementById('sessionLineChart'), {
+                type: 'line',
+                data: {
+                    labels: sessionCategories,
+                    datasets: [{
+                        label: 'Session Distribution',
+                        data: sessionCounts,
+                        borderColor: 'rgba(255, 159, 64, 1)',
+                        backgroundColor: 'rgba(255, 159, 64, 0.2)',
+                        fill: true,
+                        tension: 0.1,
+                        pointRadius: 5
+                    }]
+                },
+                options: { scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+            });
+
+            new Chart(document.getElementById('roomLineChart'), {
+                type: 'line',
+                data: {
+                    labels: roomLabels,
+                    datasets: [{
+                        label: 'Total Study Time per Room (minutes)',
+                        data: roomData,
+                        borderColor: 'rgba(255, 206, 86, 1)',
+                        backgroundColor: 'rgba(255, 206, 86, 0.2)',
+                        fill: true,
+                        tension: 0.1,
+                        pointRadius: 5
+                    }]
+                },
+                options: { scales: { y: { beginAtZero: true } } }
+            });
+
+            new Chart(document.getElementById('roomBarChart'), {
+                type: 'bar',
+                data: {
+                    labels: roomLabels,
+                    datasets: [{
+                        label: 'Total Study Time per Room (minutes)',
+                        data: roomData,
+                        backgroundColor: 'rgba(255, 159, 64, 0.6)'
+                    }]
+                },
+                options: { scales: { y: { beginAtZero: true } } }
+            });
+        });
+});
+</script>
+{% endblock %}

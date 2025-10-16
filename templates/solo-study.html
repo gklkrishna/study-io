@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+{% block title %}Solo Study - Study.io{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='solo-study.css') }}">
+
+<div class="main-content">
+    <!-- Study Section -->
+    <div class="study-section">
+        <h1>Solo Study Room</h1>
+        <p>Enhance focus with timers, music, and focus mode.</p>
+
+        <!-- Pomodoro Timer -->
+        <div class="pomodoro-timer">
+            <h2>Pomodoro Timer</h2>
+            <div class="timer-display">25:00</div>
+            <button id="start-timer">Start</button>
+            <button id="pause-timer">Pause</button>
+            <button id="reset-timer">Reset</button>
+        </div>
+
+        <!-- Study Music -->
+        <div class="study-music">
+            <h2>Study Music</h2>
+            <select id="music-select">
+                <option value="lofi">Lo-Fi Beats</option>
+                <option value="nature">Nature Sounds</option>
+                <option value="classical">Classical Music</option>
+            </select>
+            <button id="play-music">Play</button>
+        </div>
+
+        <!-- Focus Mode -->
+        <div class="focus-mode">
+            <h3>Focus Mode</h3>
+            <label class="switch">
+                <input type="checkbox" id="focusToggle">
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </div>
+
+    <!-- Right Sidebar -->
+    <div class="right-sidebar">
+        <!-- Notepad -->
+        <div class="notepad">
+            <h2>Notepad</h2>
+            <textarea class="notepad-textbox" id="note-area" placeholder="Write your notes here..."></textarea>
+            <button class="red-button" id="save-note">Save</button>
+        </div>
+
+        <!-- To-Do List -->
+        <div class="todo-list">
+            <h2>To-Do List</h2>
+            <input type="text" class="task-input" id="todo-input" placeholder="Add a task...">
+            <button class="red-button" id="add-task">Add</button>
+            <ul id="todo-items"></ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Load todos and notes from sessionStorage when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        loadTodos();
+        loadNotes();
+
+        // Add event listeners
+        document.getElementById('add-task').addEventListener('click', addTodo);
+        document.getElementById('save-note').addEventListener('click', saveNotes);
+
+        // Timer functionality
+        let timerInterval;
+        let timeLeft = 25 * 60; // 25 minutes in seconds
+        const timerDisplay = document.querySelector('.timer-display');
+
+        document.getElementById('start-timer').addEventListener('click', () => {
+            if (!timerInterval) {
+                timerInterval = setInterval(() => {
+                    timeLeft--;
+                    updateTimerDisplay();
+                    if (timeLeft <= 0) clearInterval(timerInterval);
+                }, 1000);
+            }
+        });
+
+        document.getElementById('pause-timer').addEventListener('click', () => {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        });
+
+        document.getElementById('reset-timer').addEventListener('click', () => {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            timeLeft = 25 * 60;
+            updateTimerDisplay();
+        });
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerDisplay.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+
+        // Focus mode toggle
+        document.getElementById('focusToggle').addEventListener('change', (e) => {
+            document.body.classList.toggle('focus-mode-active', e.target.checked);
+        });
+
+        // Placeholder for music
+        document.getElementById('play-music').addEventListener('click', () => {
+            const music = document.getElementById('music-select').value;
+            console.log(`Playing ${music}`);
+        });
+    });
+
+    // To-Do List Functions
+    function addTodo() {
+        const todoInput = document.getElementById('todo-input');
+        const todoText = todoInput.value.trim();
+
+        if (todoText !== '') {
+            const todos = getTodosFromStorage();
+            const newTodo = { text: todoText, completed: false };
+            todos.push(newTodo);
+            saveTodosToStorage(todos);
+
+            todoInput.value = '';
+            renderTodos();
+        }
+    }
+
+    function renderTodos() {
+        const todoList = document.getElementById('todo-items');
+        todoList.innerHTML = '';
+        const todos = getTodosFromStorage();
+
+        todos.forEach((todo, index) => {
+            const li = document.createElement('li');
+            li.className = todo.completed ? 'completed' : '';
+            li.innerHTML = `
+                <span class="todo-text">${todo.text}</span>
+                <div class="todo-actions">
+                    <button class="toggle-btn" onclick="toggleTodo(${index})">${todo.completed ? '✔' : '⬜'}</button>
+                    <button class="delete-btn" onclick="deleteTodo(${index})">🗑️</button>
+                </div>
+            `;
+            todoList.appendChild(li);
+        });
+    }
+
+    function toggleTodo(index) {
+        const todos = getTodosFromStorage();
+        todos[index].completed = !todos[index].completed;
+        saveTodosToStorage(todos);
+        renderTodos();
+    }
+
+    function deleteTodo(index) {
+        const todos = getTodosFromStorage();
+        todos.splice(index, 1);
+        saveTodosToStorage(todos);
+        renderTodos();
+    }
+
+    function getTodosFromStorage() {
+        const todos = sessionStorage.getItem('soloStudyTodos');
+        return todos ? JSON.parse(todos) : [];
+    }
+
+    function saveTodosToStorage(todos) {
+        sessionStorage.setItem('soloStudyTodos', JSON.stringify(todos));
+    }
+
+    function loadTodos() {
+        renderTodos();
+    }
+
+    // Notepad Functions
+    function saveNotes() {
+        const noteArea = document.getElementById('note-area');
+        const noteText = noteArea.value.trim();
+        sessionStorage.setItem('soloStudyNotes', noteText);
+        console.log('Note saved:', noteText); // Optional: Replace with actual feedback if needed
+    }
+
+    function loadNotes() {
+        const noteArea = document.getElementById('note-area');
+        const savedNotes = sessionStorage.getItem('soloStudyNotes');
+        if (savedNotes) {
+            noteArea.value = savedNotes;
+        }
+    }
+
+
+     // Study Music Player
+  const musicSelect = document.getElementById("music-select");
+  const playMusicButton = document.getElementById("play-music");
+  let currentAudio = null;
+
+  playMusicButton.addEventListener("click", function () {
+      if (currentAudio) {
+          currentAudio.pause();
+          currentAudio = null;
+          playMusicButton.textContent = "Play";
+          return;
+      }
+
+      const selectedMusic = musicSelect.value;
+      const musicFiles = {
+          "lofi": "static/audios/lofi music.mp3",
+          "nature": "static/audios/nature.mp3",
+          "classical": "static/audios/classy.mp3"
+      };
+
+      currentAudio = new Audio(musicFiles[selectedMusic]);
+      currentAudio.loop = true;
+      currentAudio.play();
+      playMusicButton.textContent = "Pause";
+  });
+
+
+</script>
+{% endblock %}

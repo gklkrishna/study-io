@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Study Room</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='createstudyroom.css') }}">
+</head>
+<body>
+    <a href="{{ url_for('dashboard') }}" class="home-button">
+        <img src="{{ url_for('static', filename='images/home.png') }}" alt="Home" class="home-icon" />
+    </a>
+    <div class="container">
+        <div class="form-box">
+            <h1>Join a Study Room</h1>
+            
+            {% with messages = get_flashed_messages(with_categories=True) %}
+                {% if messages %}
+                    <div class="message-box">
+                        {% for category, message in messages %}
+                            <div class="message {{ 'error' if category == 'error' else 'success' }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <form action="{{ url_for('joinstudyroom') }}" method="POST">
+                <div class="input-group single-input">
+                    <input type="text" name="room_code" placeholder="Enter Unique Code" required>
+                </div>
+                <div class="button-container">
+                    <button type="submit">Join Study Room</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

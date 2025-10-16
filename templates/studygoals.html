@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block title %}Study Goals - Study.io{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='studygoals.css') }}">
+
+<div class="main-content">
+    <div class="header">
+        <h1>My Study Goals</h1>
+    </div>
+
+    <section class="goal-form">
+        <input type="text" id="goalInput" placeholder="Enter your study goal...">
+        <button type="button" onclick="addGoal()">Add Goal</button>
+    </section>
+
+    <section class="goals-list">
+        <h2>Goals Progress</h2>
+        <ul id="goalList"></ul>
+    </section>
+
+    <script>
+    // Load goals from sessionStorage when the page loads
+    document.addEventListener('DOMContentLoaded', () => {
+        loadGoals();
+    });
+
+    function addGoal() {
+        let goalInput = document.getElementById("goalInput");
+        let goalText = goalInput.value.trim();
+
+        if (goalText !== "") {
+            const goals = getGoalsFromStorage();
+            const newGoal = { text: goalText, completed: false };
+            goals.push(newGoal);
+            saveGoalsToStorage(goals);
+
+            goalInput.value = "";
+            renderGoals();
+        }
+    }
+
+    function renderGoals() {
+        let goalList = document.getElementById("goalList");
+        goalList.innerHTML = "";
+        const goals = getGoalsFromStorage();
+
+        goals.forEach((goal, index) => {
+            let li = document.createElement("li");
+            li.className = goal.completed ? "completed" : "";
+            li.innerHTML = `
+                <span class="goal-text">${goal.text}</span>
+                <div class="goal-actions">
+                    <button class="toggle-btn" onclick="toggleGoal(${index})">${goal.completed ? "✔" : "➕"}</button>
+                    <button class="delete-btn" onclick="deleteGoal(${index})">🗑️</button>
+                </div>
+            `;
+            goalList.appendChild(li);
+        });
+    }
+
+    function toggleGoal(index) {
+        const goals = getGoalsFromStorage();
+        goals[index].completed = !goals[index].completed;
+        saveGoalsToStorage(goals);
+        renderGoals();
+    }
+
+    function deleteGoal(index) {
+        const goals = getGoalsFromStorage();
+        goals.splice(index, 1);
+        saveGoalsToStorage(goals);
+        renderGoals();
+    }
+
+    function getGoalsFromStorage() {
+        const goals = sessionStorage.getItem('studyGoals');
+        return goals ? JSON.parse(goals) : [];
+    }
+
+    function saveGoalsToStorage(goals) {
+        sessionStorage.setItem('studyGoals', JSON.stringify(goals));
+    }
+
+    function loadGoals() {
+        renderGoals();
+    }
+    </script>
+</div>
+
+{% endblock %}

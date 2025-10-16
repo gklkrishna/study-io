@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Study Room</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='createstudyroom.css') }}">
+</head>
+<body>
+    <!-- Home Button -->
+    <a href="{{ url_for('dashboard') }}" class="home-button">
+        <img src="{{ url_for('static', filename='images/home.png') }}" alt="Home" class="home-icon" />
+    </a>
+
+    <div class="container">
+        <div class="form-box">
+            <h1>Create a Study Room</h1>
+
+            {% with messages = get_flashed_messages(with_categories=True) %}
+                {% if messages %}
+                    <div class="message-box">
+                        {% for category, message in messages %}
+                            <div class="message {{ 'error' if category == 'error' else 'success' }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <form action="{{ url_for('createstudyroom') }}" method="POST">
+                <div class="input-group">
+                    <input type="text" name="room_name" placeholder="Study Room Name" required>
+                    <input type="text" name="room_code" placeholder="Unique Code" required>
+                </div>
+                <div class="button-container">
+                    <button type="submit" class="purple-btn">Create Study Room</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

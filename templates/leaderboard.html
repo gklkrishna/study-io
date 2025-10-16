@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leaderboard - {{ room.room_name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='studyroom.css') }}" />
+    <style>
+      /* Leaderboard Page Custom Styles */
+      body {
+        /*background: linear-gradient(135deg, #f093fb, #f5576c);*/
+        background-image: url("{{ url_for('static', filename='images/double-bubble-dark.webp') }}");
+        background-repeat: repeat;
+        color: #333;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      }
+      .title {
+        margin-top: 20px;
+        font-size: 32px;
+        font-weight: bold;
+        color: #fff;
+      }
+      .back-btn {
+        margin: 20px;
+        padding: 12px 24px;
+        font-size: 16px;
+        background-color: #f5576c;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        color: #fff;
+        transition: background-color 0.3s ease;
+      }
+      .back-btn:hover {
+        background-color: #e84350;
+      }
+      .box.leaderboard {
+        margin: 20px auto;
+        width: 80%;
+        padding: 30px;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+      }
+      #leaderboard-tabs {
+        margin-bottom: 20px;
+        text-align: center;
+      }
+      .lb-tab {
+        margin: 0 8px;
+        padding: 10px 20px;
+        background: #a29bfe;
+        color: #fff;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease;
+      }
+      .lb-tab:hover {
+        background: #6c5ce7;
+        transform: scale(1.05);
+      }
+      .lb-tab.active {
+        background: #00b894;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+      }
+      #leaderboard {
+        list-style-type: none;
+        padding: 0;
+      }
+      #leaderboard li {
+        background: rgba(99, 110, 114, 0.15);
+        padding: 12px 15px;
+        margin: 10px 0;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        opacity: 0;
+        animation: fadeIn 0.5s forwards;
+      }
+      /* Delay each item a bit further */
+      #leaderboard li:nth-child(1) { animation-delay: 0.1s; }
+      #leaderboard li:nth-child(2) { animation-delay: 0.2s; }
+      #leaderboard li:nth-child(3) { animation-delay: 0.3s; }
+      #leaderboard li:nth-child(4) { animation-delay: 0.4s; }
+      #leaderboard li:nth-child(5) { animation-delay: 0.5s; }
+      
+      @keyframes fadeIn {
+        to { opacity: 1; }
+      }
+      .lb-rank {
+        margin-right: 15px;
+        font-weight: bold;
+        font-size: 18px;
+        color: #2d3436;
+      }
+      .lb-profile {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        margin-right: 15px;
+      }
+      .lb-name {
+        flex: 1;
+        font-size: 18px;
+        font-weight: 600;
+        color: #2d3436;
+      }
+      .lb-time {
+        margin-left: 15px;
+        font-size: 16px;
+        background: #dfe6e9;
+        padding: 5px 10px;
+        border-radius: 5px;
+        color: #2d3436;
+      }
+      .leaderboard-header {
+        text-align: center;
+        font-size: 24px;
+        margin-bottom: 15px;
+        color: #2d3436;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="title">Leaderboard - {{ room.room_name }}</h1>
+    <button class="back-btn" onclick="window.location.href='/studyroom/{{ room.room_code }}'">
+      Back to Study Room
+    </button>
+
+    <div class="box leaderboard">
+      <!-- Leaderboard Tabs -->
+      <div id="leaderboard-tabs">
+        <button class="lb-tab active" data-type="overall">Overall</button>
+        <button class="lb-tab" data-type="monthly">Monthly</button>
+        <button class="lb-tab" data-type="weekly">Weekly</button>
+        <button class="lb-tab" data-type="daily">Daily</button>
+      </div>
+      <!-- Header for Study Duration -->
+      <div class="leaderboard-header">Study Duration</div>
+      <!-- Leaderboard List -->
+      <ul id="leaderboard">
+        <!-- Leaderboard items will be dynamically inserted here -->
+      </ul>
+    </div>
+
+    <script>
+      let leaderboardData = {};
+      let currentType = 'overall';
+
+      function fetchLeaderboard() {
+        fetch(`/leaderboard/{{ room.room_code }}`)
+          .then(response => response.json())
+          .then(data => {
+            leaderboardData = data;
+            renderLeaderboard();
+          })
+          .catch(err => console.error('Error fetching leaderboard data:', err));
+      }
+
+      function renderLeaderboard() {
+        const lbList = document.getElementById("leaderboard");
+        lbList.innerHTML = "";
+        if (!leaderboardData[currentType] || leaderboardData[currentType].length === 0) {
+          lbList.innerHTML = "<li>No data available</li>";
+          return;
+        }
+        leaderboardData[currentType].forEach((entry, index) => {
+          const li = document.createElement("li");
+          li.innerHTML = `
+            <span class="lb-rank">${index + 1}.</span>
+            <img class="lb-profile" src="/static/images/${entry.profile_picture}" alt="${entry.username}" />
+            <span class="lb-name">${entry.username}</span>
+            <span class="lb-time">${formatDuration(entry.total)}</span>
+          `;
+          lbList.appendChild(li);
+        });
+      }
+
+      function formatDuration(seconds) {
+        const h = Math.floor(seconds / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        const s = seconds % 60;
+        return `${h}:${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+      }
+
+      // Handle tab active state
+      const tabs = document.querySelectorAll(".lb-tab");
+      tabs.forEach(btn => {
+        btn.addEventListener("click", function() {
+          // Remove active class from all tabs and add to clicked one
+          tabs.forEach(tab => tab.classList.remove("active"));
+          this.classList.add("active");
+          currentType = this.getAttribute("data-type");
+          renderLeaderboard();
+        });
+      });
+
+      fetchLeaderboard();
+      setInterval(fetchLeaderboard, 30000);
+    </script>
+  </body>
+</html>

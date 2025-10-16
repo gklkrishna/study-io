@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ community|capitalize }} Community Blog - Study.io</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='community_blog.css') }}">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="{{ url_for('dashboard') }}" class="home-btn"><img src="{{ url_for('static', filename='images/home.png') }}" alt="Home" class="nav-icon"></a>
+            <a href="{{ url_for('community') }}" class="community-btn"><img src="{{ url_for('static', filename='images/community.png') }}" alt="Community" class="nav-icon"></a>
+        </nav>
+        <h1>Study.io</h1>
+    </header>
+    
+    <main>
+        <h2>{{ community|capitalize }} Community Blog</h2>
+        
+        <section class="new-post">
+            <h3>Create New Post</h3>
+            <form method="POST">
+                <input type="text" name="title" placeholder="Post Title" required>
+                <textarea name="content" placeholder="Write your post here..." required></textarea>
+                <button type="submit">Post</button>
+            </form>
+        </section>
+        
+        <section class="posts-list">
+            <h3>Recent Posts</h3>
+            {% for post in posts %}
+            <div class="post">
+                <h4><a href="{{ url_for('view_post', community=community, post_id=post.id) }}">{{ post.title }}</a></h4>
+                <p>{{ post.content[:150] }}{% if post.content|length > 150 %}...{% endif %}</p>
+                <small>By {{ post.author.name }} on {{ post.timestamp.strftime('%Y-%m-%d %H:%M') }}</small>
+            </div>
+            {% else %}
+            <p>No posts yet. Be the first to post!</p>
+            {% endfor %}
+        </section>
+    </main>
+    
+    <footer>
+        <p>© 2025 Study.io - All rights reserved.</p>
+    </footer>
+</body>
+</html>

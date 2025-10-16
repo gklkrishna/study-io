@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Study.io{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='sidebar.css') }}">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: row;
+            background: #333333;
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+        }
+        .content {
+            margin-left: 220px;
+            padding: 20px;
+            flex-grow: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logo">
+            <h2>Study.io</h2>
+        </div>
+        <a href="{{ url_for('profile') }}">👤 Profile</a>
+        <a href="{{ url_for('dashboard') }}">🏠 Dashboard</a>
+        <a href="{{ url_for('solo_study') }}">📖 Solo Study</a>
+        <a href="{{ url_for('studygoals') }}">🎯 Study Goals</a>
+        <a href="{{ url_for('analysis') }}">📊 Study Stats</a>
+        <a href="{{ url_for('community') }}">👥 Communities</a>
+        <a href="#" id="logout-link">⚙️ Logout</a>
+    </div>
+
+    <!-- Page Content -->
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <script>
+        // Add event listener for logout link
+        document.getElementById('logout-link').addEventListener('click', function(e) {
+            e.preventDefault(); // Prevent default link behavior
+            sessionStorage.clear(); // Clear all sessionStorage data
+            window.location.href = "{{ url_for('logout') }}"; // Redirect to logout route
+        });
+    </script>
+</body>
+</html>

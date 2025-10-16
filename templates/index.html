@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Room Web App</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script defer src="{{ url_for('static', filename='script.js') }}"></script>
+</head>
+<body>
+    <header>
+        <div class="logo">STUDY.IO</div>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#community">Community</a></li>
+                <li><a href="{{ url_for('signin') }}">Sign In</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <section id="hero" class="hero">
+        <video autoplay loop muted playsinline class="background-video">
+            <source src="{{ url_for('static', filename='videos/white-background.mp4') }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        <div class="hero-content">
+            <h1>Welcome to STUDY.IO</h1>
+            <p>Boost your productivity with our interactive study rooms and gamified progress tracking.</p>
+            <a href="{{ url_for('signup') }}" class="cta-button">Get Started</a>
+        </div>
+    </section>
+    
+    <section id="features" class="features">
+        <h2>Why Choose STUDY.IO?</h2>
+        <div class="interactive-buttons">
+            <a href="{{ url_for('static', filename='studyrooms.html') }}" class="button-card">
+                <img src="{{ url_for('static', filename='images/24.jpg') }}" alt="">
+                <span>24/7 Virtual Study Rooms</span>
+            </a>
+            <a href="{{ url_for('static', filename='gamification.html') }}" class="button-card">
+                <img src="{{ url_for('static', filename='images/game.jpg') }}" alt="">
+                <span>Gamified Progress Tracking</span>
+            </a>
+            <a href="{{ url_for('community') }}" class="button-card">
+                <img src="{{ url_for('static', filename='images/com.jpg') }}" alt="">
+                <span>Community Events</span>
+            </a>
+        </div>
+    </section>
+    
+    <section id="community" class="community">
+        <h2>Our Growing Community</h2>
+        <div class="community-stats">
+            <div class="community-stat">10K+ Active Users</div>
+            <div class="community-stat">500K+ Study Sessions Completed</div>
+            <div class="community-stat">100+ Countries Represented</div>
+        </div>
+
+        <div class="testimonials">
+            <h2>What Our Users Say</h2>
+            <div class="testimonial">
+                <p>"Study.IO has transformed my productivity. I feel more accountable and focused than ever!"</p>
+                <h4>- Emily J.</h4>
+            </div>
+            <div class="testimonial">
+                <p>"Being part of a global study community keeps me motivated every day."</p>
+                <h4>- Alex T.</h4>
+            </div>
+        </div>
+    </section>
+
+    <section class="how-it-works">
+        <h2>How It Works</h2>
+        <div class="interactive-buttons">
+            <a href="{{ url_for('signup') }}" class="button-card">Create an Account</a>
+            <a href="{{ url_for('static', filename='studyrooms.html') }}" class="button-card">Join or Create a Study Room</a>
+            <a href="{{ url_for('static', filename='motivation.html') }}" class="button-card">Stay Motivated</a>
+        </div>
+    </section>
+    
+    <section class="cta">
+        <h2>Start Studying Smarter Today</h2>
+        <p>Connect with thousands of students, track progress, and boost your focus.</p>
+        <a href="{{ url_for('signup') }}" class="btn">Get Started</a>
+    </section>
+    <footer>
+        <div class="footer-links">
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="#features">Features</a>
+            <a href="#community">Community</a>
+            <a href="{{ url_for('signin') }}">Sign In</a>
+        </div>
+        <p>Contact us: support@studyapp.com</p>
+        <p>&copy; 2025 StudyApp. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>

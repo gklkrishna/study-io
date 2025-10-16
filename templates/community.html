@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block title %}Community - Study.io{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='community.css') }}">
+
+<div class="main-content">
+    <!-- Communities Section -->
+    <section class="community-section">
+        <h2>Join a Study Community</h2>
+        <p>Find and join communities based on your study interests.</p>
+
+        <div class="community-container">
+
+            <!-- Community Card 1 -->
+            <div class="community-card">
+                <img src="{{ url_for('static', filename='images/science_image.jpg') }}" alt="Science Community">
+                <h3>Science Enthusiasts</h3>
+                <p>Discuss physics, chemistry, biology, and all things science.</p>
+                <a href="{{ url_for('community_blog', community='science') }}" class="join-btn">Join Community</a>
+            </div>
+
+            <!-- Community Card 2 -->
+            <div class="community-card">
+                <img src="{{ url_for('static', filename='images/programming.jpg') }}" alt="Coding Community">
+                <h3>Coding & Programming</h3>
+                <p>Join fellow coders to share knowledge and solve problems.</p>
+                <a href="{{ url_for('community_blog', community='coding') }}" class="join-btn">Join Community</a>
+            </div>
+
+            <!-- Community Card 3 -->
+            <div class="community-card">
+                <img src="{{ url_for('static', filename='images/maths.jpg') }}" alt="Math Community">
+                <h3>Math Wizards</h3>
+                <p>Love solving equations? Join and explore advanced mathematics.</p>
+                <a href="{{ url_for('community_blog', community='math') }}" class="join-btn">Join Community</a>
+            </div>
+
+            <!-- Community Card 4 -->
+            <div class="community-card">
+                <img src="{{ url_for('static', filename='images/history.jpg') }}" alt="History Community">
+                <h3>History Buffs</h3>
+                <p>Learn and discuss world history, civilizations, and events.</p>
+                <a href="{{ url_for('community_blog', community='history') }}" class="join-btn">Join Community</a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 Study.io - All rights reserved.</p>
+    </footer>
+</div>
+
+{% endblock %}

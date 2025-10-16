@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ post.title }} - {{ community|capitalize }} Blog - Study.io</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='view_post.css') }}">
+</head>
+<body>
+  <header>
+    <h1>Study.io</h1>
+    <nav>
+      <a href="{{ url_for('dashboard') }}">Home</a>
+      <a href="{{ url_for('community') }}">Community</a>
+    </nav>
+  </header>
+  
+  <main>
+    <article class="blog-post">
+      <h2>{{ post.title }}</h2>
+      <p><small>By {{ post.author.name }} on {{ post.timestamp.strftime('%Y-%m-%d %H:%M') }}</small></p>
+      <div class="content">
+        {{ post.content|safe }}
+      </div>
+    </article>
+    
+    <section class="comments">
+      <h3>Comments</h3>
+      {% for comment in comments %}
+      <div class="comment">
+        <p>{{ comment.content }}</p>
+        <small>By {{ comment.author.name }} on {{ comment.timestamp.strftime('%Y-%m-%d %H:%M') }}</small>
+      </div>
+      {% else %}
+      <p>No comments yet. Be the first to comment!</p>
+      {% endfor %}
+      
+      <h4>Add a Comment</h4>
+      <form method="POST">
+        <textarea name="comment" placeholder="Your comment..." required></textarea>
+        <button type="submit">Submit Comment</button>
+      </form>
+    </section>
+  </main>
+  
+  <footer>
+    <p>© 2025 Study.io - All rights reserved.</p>
+  </footer>
+</body>
+</html>

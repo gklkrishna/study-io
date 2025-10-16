@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Study Room</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='studyroom.css') }}" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <style>
+      /* Focus Mode Styles */
+      .focus-mode-active .grid-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        grid-template-columns: 1fr !important;
+      }
+      
+      .focus-mode-active .study-area {
+        width: 80%;
+        max-width: 600px;
+        margin: 0 auto;
+        transform: scale(1.05);
+        box-shadow: 0 0 30px rgba(255, 107, 107, 0.5);
+        transition: all 0.3s ease;
+        background: rgba(42, 42, 42, 0.9);
+        backdrop-filter: blur(5px);
+        border: 2px solid #ff6b6b;
+      }
+      
+      .focus-mode-active .chat-box,
+      .focus-mode-active .leaderboard {
+        display: none !important;
+      }
+      
+      .focus-mode-active .timer {
+        font-size: 3rem;
+        color: #ff6b6b;
+        text-shadow: 0 0 10px rgba(255, 107, 107, 0.5);
+      }
+      
+      .focus-mode-active .timer-buttons {
+        justify-content: center;
+      }
+      
+      @keyframes pulse {
+        0% { box-shadow: 0 0 15px rgba(255, 107, 107, 0.4); }
+        50% { box-shadow: 0 0 30px rgba(255, 107, 107, 0.8); }
+        100% { box-shadow: 0 0 15px rgba(255, 107, 107, 0.4); }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Top Controls Container -->
+    <div class="top-controls">
+      <!-- Home Button on the Left -->
+      <a href="{{ url_for('dashboard') }}" class="home-button">
+        <img src="{{ url_for('static', filename='images/home.png') }}" alt="Home" class="home-icon" />
+      </a>
+      <!-- Title Centered -->
+      <h1 class="title">Study Room: {{ room.room_name if room else 'New' }}</h1>
+      <!-- Focus Mode Toggle on the Right -->
+      <label class="switch">
+        <input type="checkbox" id="focus-toggle" onchange="toggleFocusMode()">
+        <span class="slider round"></span>
+      </label>
+      <span class="focus-label">Focus Mode</span>
+    </div>
+  
+    <div class="grid-container">
+      <!-- Chat Section -->
+      <div class="box chat-box">
+        <div class="chat-box" id="chat-box">
+          {% for msg in messages %}
+          <div class="message {% if msg.name == session['user_name'] %}sender{% else %}receiver{% endif %}">
+            <div class="profile-pic">
+              <img src="{{ url_for('static', filename='images/' + msg.profile_picture) }}" alt="Profile" />
+            </div>
+            <div class="message-content">
+              <span class="username">{{ msg.name }}</span>
+              {{ msg.message }}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <div class="chat-input-container">
+          <div class="chat-input">
+            <textarea id="message-input" placeholder="Type a message..." onkeypress="handleKeyPress(event)"></textarea>
+            <button class="send-btn" onclick="sendMessage()">Send</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Study Timer -->
+      <div class="box study-area">
+        <h2>Currently Studying Members</h2>
+        <div id="active-members"></div>
+
+        <h2>Your Pomodoro Timer</h2>
+        <div class="timer" id="timer-display">25:00</div>
+        <div class="timer-buttons">
+          <button onclick="startTimer()" class="btn start">START</button>
+          <button onclick="resetTimer()" class="btn reset">STOP</button>
+        </div>
+      </div>
+
+      <!-- Leaderboard & Members -->
+      <div class="box leaderboard">
+        <h2>Leaderboards</h2>
+        <button class="btn" onclick="window.location.href='/studyroom/{{ room.room_code }}/leaderboard'">
+          View Leaderboard
+        </button>
+
+        <h2>Room Members</h2>
+        <ul id="members-list"></ul>
+      </div>
+    </div>
+    <!-- Leave Room Button -->
+    <button class="leave-btn" onclick="leaveRoom()">Leave Room</button>
+
+    <script>
+      function leaveRoom() {
+        socket.emit("leave_room", { room_id: room, username: username });
+        document.getElementById("chat-box").innerHTML = "";
+        window.location.href = "{{ url_for('dashboard') }}";
+      }
+
+      var socket = io();
+      var room = "{{ room.room_id }}";
+      var username = "{{ session['user_name'] }}";
+      var timer = null;
+      var timeLeft = 25 * 60;
+      var studying = false;
+
+      // Join the study room for timer sharing and also for chat.
+      socket.emit("join_room", { room_id: room, username: username });
+      socket.emit("join", { room: room, username: username });
+
+      // Chat: Function to send a chat message.
+      function sendMessage() {
+        const input = document.getElementById("message-input");
+        if (input.value.trim() !== "") {
+          socket.emit("message", {
+            room: room,
+            username: username,
+            message: input.value
+          });
+          input.value = "";
+        }
+      }
+
+      // Chat: Listen for incoming messages.
+      socket.on("message", function(data) {
+        const chatBox = document.getElementById("chat-box");
+        const newMessage = document.createElement("div");
+        newMessage.classList.add("message", data.username === username ? "sender" : "receiver");
+        newMessage.innerHTML = `
+          <div class="profile-pic">
+            <img src="/static/images/${data.profile_picture}" alt="Profile">
+          </div>
+          <div class="message-content">
+            <span class="username">${data.username}</span>
+            ${data.message}
+          </div>
+        `;
+        chatBox.appendChild(newMessage);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      });
+
+      // Timer Functions
+      function startTimer() {
+        if (!timer) {
+          socket.emit("start_timer", { room_id: room });
+          timer = setInterval(() => {
+            timeLeft--;
+            updateTimerDisplay();
+            socket.emit("update_timer", { room_id: room, timeLeft: timeLeft });
+          }, 1000);
+        }
+      }
+
+      function pauseTimer() {
+        clearInterval(timer);
+        timer = null;
+        socket.emit("pause_timer", { room_id: room });
+      }
+
+      function resetTimer() {
+        clearInterval(timer);
+        timer = null;
+        timeLeft = 25 * 60;
+        updateTimerDisplay();
+        socket.emit("reset_timer", { room_id: room });
+      }
+
+      function updateTimerDisplay() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        document.getElementById("timer-display").innerText = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+      }
+
+      // Timer Sharing: Listen for shared timer updates.
+      socket.on("update_studying_members", function(data) {
+        console.log("Received timer update:", data);
+        const activeMembersDiv = document.getElementById("active-members");
+        activeMembersDiv.innerHTML = "";
+        data.members.forEach(member => {
+          let memberElement = document.getElementById(`studying-${member.user_id}`);
+          if (!memberElement) {
+            memberElement = document.createElement("div");
+            memberElement.classList.add("studying-member");
+            memberElement.id = `studying-${member.user_id}`;
+            memberElement.innerHTML = `
+              <img src="/static/images/${member.profile_picture}" alt="Profile" class="profile-pic">
+              <span>${member.username}</span>
+              <span id="timer-${member.user_id}">${formatTime(member.time_left)}</span>
+            `;
+            activeMembersDiv.appendChild(memberElement);
+          } else {
+            document.getElementById(`timer-${member.user_id}`).innerText = formatTime(member.time_left);
+          }
+        });
+      });
+
+      function formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${minutes}:${secs < 10 ? "0" : ""}${secs}`;
+      }
+
+      socket.on("remove_studying_member", function(data) {
+        const memberElement = document.getElementById(`studying-${data.user_id}`);
+        if (memberElement) {
+          memberElement.remove();
+        }
+      });
+
+      function handleKeyPress(event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+          event.preventDefault();
+          sendMessage();
+        }
+      }
+
+      // Leaderboard functionality
+      let leaderboardData = {};
+      let currentType = 'overall';
+
+      function fetchLeaderboard() {
+        fetch(`/leaderboard/{{ room.room_code }}`)
+          .then(response => response.json())
+          .then(data => {
+            leaderboardData = data;
+            renderLeaderboard();
+          })
+          .catch(err => console.error('Error fetching leaderboard data:', err));
+      }
+
+      function renderLeaderboard() {
+        const lbList = document.getElementById("leaderboard");
+        lbList.innerHTML = "";
+        if (!leaderboardData[currentType] || leaderboardData[currentType].length === 0) {
+          lbList.innerHTML = "<li>No data available</li>";
+          return;
+        }
+        leaderboardData[currentType].forEach((entry, index) => {
+          const li = document.createElement("li");
+          li.innerHTML = `
+            <span class="lb-rank">${index + 1}.</span>
+            <img class="lb-profile" src="/static/images/${entry.profile_picture}" alt="${entry.username}" />
+            <span class="lb-name">${entry.username}</span>
+            <span class="lb-time">${formatDuration(entry.total)}</span>
+          `;
+          lbList.appendChild(li);
+        });
+      }
+
+      function formatDuration(seconds) {
+        const h = Math.floor(seconds / 3600);
+        const m = Math.floor((seconds % 3600) / 60);
+        const s = seconds % 60;
+        return `${h}:${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+      }
+
+      document.querySelectorAll(".lb-tab").forEach(btn => {
+        btn.addEventListener("click", function() {
+          currentType = this.getAttribute("data-type");
+          renderLeaderboard();
+        });
+      });
+
+      fetchLeaderboard();
+      setInterval(fetchLeaderboard, 30000);
+
+      function fetchRoomMembers() {
+        fetch(`/roommembers/{{ room.room_code }}`)
+          .then(response => response.json())
+          .then(data => {
+            renderRoomMembers(data.members);
+          })
+          .catch(err => console.error('Error fetching room members:', err));
+      }
+
+      function renderRoomMembers(members) {
+        const membersList = document.getElementById("members-list");
+        membersList.innerHTML = "";
+        if (!members || members.length === 0) {
+          membersList.innerHTML = "<li>No members found</li>";
+          return;
+        }
+        members.forEach(member => {
+          const li = document.createElement("li");
+          li.innerHTML = `
+            <div style="display: flex; align-items: center;">
+              <img src="/static/images/${member.profile_picture}" alt="${member.name}" style="width:40px; height:40px; border-radius:50%; margin-right:10px;">
+              <span style="font-size:16px; color:white;">${member.name}</span>
+            </div>
+          `;
+          membersList.appendChild(li);
+        });
+      }
+
+      fetchRoomMembers();
+      setInterval(fetchRoomMembers, 60000);
+
+      // Enhanced Focus Mode Functionality
+      function toggleFocusMode() {
+        const isFocusMode = document.getElementById("focus-toggle").checked;
+        const studyArea = document.querySelector(".study-area");
+        
+        if (isFocusMode) {
+          document.body.classList.add("focus-mode-active");
+          studyArea.style.animation = "pulse 2s infinite";
+        } else {
+          document.body.classList.remove("focus-mode-active");
+          studyArea.style.animation = "";
+        }
+      }
+    </script>
+  </body>
+</html>

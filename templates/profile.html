@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-bg: #1f1f1f;
+            --secondary-bg: #af8282;
+            --accent: #ff6b6b;
+            --dark-accent: #e55a5a;
+            --card-bg: #2a2a2a;
+            --text-light: #ffffff;
+            --text-muted: #cccccc;
+        }
+        
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-light);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            position: relative;
+            background-image: radial-gradient(circle at 10% 20%, rgba(175, 130, 130, 0.1) 0%, rgba(31, 31, 31, 1) 90%);
+        }
+        
+        .profile-container {
+            width: 800px;
+            max-width: 90%;
+            background-color: var(--secondary-bg);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin: 20px 0;
+        }
+        
+        .profile-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .profile-info {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+        }
+        
+        .profile-info h2 {
+            font-size: 2.5rem;
+            margin: 0;
+            background: #352b2b;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .profile-picture-container {
+            position: relative;
+            margin-right: 20px;
+        }
+        
+        .profile-picture {
+            width: 130px;
+            height: 150px;
+            border-radius: 25px;
+            object-fit: cover;
+            border: 3px solid var(--accent);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .profile-picture:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+        }
+        
+        .buttons {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        
+        .edit-button {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--text-light);
+            color: var(--text-light);
+            padding: 8px;
+            border-radius: 50%;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        
+        .edit-button:hover {
+            background-color: var(--text-light);
+            color: var(--primary-bg);
+            transform: rotate(15deg);
+        }
+        
+        .description {
+            background-color: var(--accent);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 25px 0;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+            text-align: left;
+        }
+        
+        .description:before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-bottom: 10px solid var(--accent);
+        }
+        
+        #descriptionContent {
+            font-style: italic;
+            line-height: 1.6;
+            margin: 0;
+        }
+        
+        .recent-rooms {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .scrolling-wrapper {
+            width: 100%;
+            -webkit-mask: linear-gradient(90deg, 
+                transparent, 
+                white 10%, 
+                white 90%, 
+                transparent
+            );
+            mask: linear-gradient(90deg, 
+                transparent, 
+                white 10%, 
+                white 90%, 
+                transparent
+            );
+            padding: 20px 0;
+        }
+        
+        .room-list {
+            display: inline-flex;
+            gap: 25px;
+            padding: 15px 0;
+            animation: scroll 40s linear infinite;
+        }
+        
+        .study-room-card {
+            min-width: 180px;
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .study-room-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--accent);
+        }
+        
+        .study-room-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .study-room-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--accent);
+        }
+        
+        .study-room-card p {
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            color: var(--text-muted);
+        }
+        
+        .join-button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+        
+        .join-button:hover {
+            background: var(--dark-accent);
+            transform: translateY(-2px);
+        }
+        
+        .empty-state {
+            background: rgba(42, 42, 42, 0.5);
+            color: var(--text-muted);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px dashed var(--accent);
+        }
+        
+        @keyframes scroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(calc(-100% - 25px)); }
+        }
+        
+        .room-list:hover {
+            animation-play-state: paused;
+        }
+        
+        /* Enhanced Edit Form */
+        .edit-form {
+            display: none;
+            margin-top: 20px;
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            animation: fadeIn 0.4s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .edit-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--accent);
+            text-align: left;
+        }
+        
+        .edit-form textarea,
+        .edit-form input[type="text"],
+        .edit-form input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+        
+        .edit-form textarea:focus,
+        .edit-form input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 2px var(--accent);
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+        
+        .save-button, .cancel-button {
+            padding: 10px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+        
+        .save-button {
+            background: var(--accent);
+            color: white;
+            border: none;
+        }
+        
+        .save-button:hover {
+            background: var(--dark-accent);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+        
+        .cancel-button {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--text-muted);
+        }
+        
+        .cancel-button:hover {
+            color: var(--text-light);
+            border-color: var(--text-light);
+        }
+        
+        /* Home Button */
+        .home-btn {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, var(--accent), var(--dark-accent));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+        
+        .home-btn:hover {
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+        }
+        
+        .home-icon {
+            width: 24px;
+            height: 24px;
+            filter: brightness(0) invert(1);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .profile-info {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .profile-picture {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+            
+            .profile-info h2 {
+                font-size: 2rem;
+            }
+            
+            .room-list {
+                animation-duration: 60s;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Home Button -->
+    <a href="{{ url_for('dashboard') }}" class="home-btn">
+        <img src="{{ url_for('static', filename='images/home.png') }}" alt="Home" class="home-icon">
+    </a>
+
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-info">
+                <div class="profile-picture-container">
+                    <img src="{{ url_for('static', filename='images/' + user.profile_picture) }}" alt="Profile Picture" class="profile-picture">
+                </div>
+                <h2>{{ user.name }}</h2>
+            </div>
+            <div class="buttons">
+                <button class="edit-button" onclick="toggleEditForm()" title="Edit Profile">
+                    <i class="fas fa-pencil-alt"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Description -->
+        <div class="description" id="descriptionText">
+            <p id="descriptionContent"></p>
+        </div>
+        
+        <!-- Edit Form -->
+        <div class="edit-form" id="editForm">
+            <form id="editProfileForm" action="{{ url_for('profile') }}" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" value="{{ user.name }}" placeholder="Enter your username">
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Bio</label>
+                    <textarea id="description" name="description" rows="4" placeholder="Tell us about yourself"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="profile_picture">Profile Picture</label>
+                    <input type="file" id="profile_picture" name="profile_picture" accept="image/*">
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="cancel-button" onclick="toggleEditForm()">Cancel</button>
+                    <button type="submit" class="save-button">Save Changes</button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Recent Rooms -->
+        <div class="recent-rooms">
+            <h3>MY STUDY ROOMS</h3>
+            <div class="scrolling-wrapper">
+                <div class="room-list">
+                    {% if study_rooms %}
+                        {% for room in study_rooms %}
+                            <div class="study-room-card">
+                                <h3>{{ room.room_name }}</h3>
+                                <p><strong>Code:</strong> {{ room.room_code }}</p>
+                                <p>Members: {{ room.member_count }}</p>
+                                <button class="join-button">Join Now</button>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="study-room-card empty-state">
+                            <p>Not a member of any study rooms yet.</p>
+                            <button class="join-button">Find Rooms</button>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load description from localStorage on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const descriptionContent = document.getElementById('descriptionContent');
+            const savedDescription = localStorage.getItem('userDescription') || "Welcome to my profile! I'm passionate about learning and collaborating with others.";
+            descriptionContent.textContent = savedDescription;
+            
+            // Pre-fill the textarea with the current description
+            document.getElementById('description').value = savedDescription;
+        });
+    
+        // Toggle edit form visibility with animation
+        function toggleEditForm() {
+            const editForm = document.getElementById('editForm');
+            if (editForm.style.display === 'block') {
+                editForm.style.animation = 'fadeIn 0.4s reverse';
+                setTimeout(() => {
+                    editForm.style.display = 'none';
+                }, 350);
+            } else {
+                editForm.style.display = 'block';
+                editForm.style.animation = 'fadeIn 0.4s ease-out';
+            }
+        }
+    
+        // Handle form submission correctly
+        document.getElementById('editProfileForm').addEventListener('submit', (e) => {
+            const description = document.getElementById('description').value.trim();
+            if (description) {
+                localStorage.setItem('userDescription', description);
+                document.getElementById('descriptionContent').textContent = description;
+            }
+    
+            // Allow form submission even if no file is uploaded
+            toggleEditForm();
+        });
+    
+        // Preview image before upload
+        document.getElementById('profile_picture').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.querySelector('.profile-picture').src = event.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
+</body>
+</html>
